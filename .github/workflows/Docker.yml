@@ -16,7 +16,6 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4.2.1
       with:
-        # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
         name: programa
         
     - name: Docker Login
@@ -29,6 +28,6 @@ jobs:
       uses: docker/build-push-action@v6.15.0
       with:
         context: .
-        file: .Dockerfile
+        file: ./Dockerfile
         push: true
         tags: augustomangini/go_ci:${{ github.ref_name }}
