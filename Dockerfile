@@ -10,4 +10,8 @@ ENV USER=root PASSWORD=root DBNAME=root
 
 COPY ./main.exe .
 
+RUN chmod +x main.exe
+
+COPY ./templates/ templates/
+
 ENTRYPOINT [ "./main" ]

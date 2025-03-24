@@ -15,5 +15,28 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: sa-east-1
         
-        - name: Obtendo arquivo da tarefa`
+        - name: Obtendo arquivo da tarefa
           run: aws ecs describe-task-definition --task-definition tarefa_api-go --query taskDefinition > task-definition.json
+
+        - name: Fill in the new image ID in the Amazon ECS task definition
+          id: task-def
+          uses: aws-actions/amazon-ecs-render-task-definition@v1
+          with:
+            task-definition: task-definition.json
+            container-name: Go
+            image: augustomangini/go_ci:Projeto_base
+            environment-variables: |
+              HOST=${{ secrets.DB_HOST }}
+              USER=${{ secrets.DB_USER }}
+              PASSWORD=${{ secrets.DB_PASSWORD }}
+              DBNAME=${{ secrets.DB_NAME }}
+              DBPORT=${{ secrets.DB_PORT }}
+              PORT=8000
+
+        - name: Deploy Amazon ECS task definition
+          uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+          with:
+            task-definition: ${{ steps.task-def.outputs.task-definition }}
+            service: servico_go
+            cluster: api-go-dev
+            wait-for-service-stability: true
