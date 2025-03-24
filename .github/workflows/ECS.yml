@@ -37,6 +37,6 @@ jobs:
           uses: aws-actions/amazon-ecs-deploy-task-definition@v2
           with:
             task-definition: ${{ steps.task-def.outputs.task-definition }}
-            service: servico_go
+            service: servico_go_5
             cluster: api-go-dev
             wait-for-service-stability: true
